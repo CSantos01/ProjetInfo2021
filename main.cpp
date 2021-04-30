@@ -94,6 +94,14 @@ vecteur Euler(vecteur X_i, vecteur F, double h, double rho)
     return X_j;
 }
 
+//Une dernière méthode utile à coder est la distance euclidienne entre 2 vecteurs :
+double distance(vecteur X_i,vecteur X_j)
+//Arguments : deux "vecteurs" de "dimension" 4 X_i et X_j
+//Renvoie : la distance euclidienne entre ces deux vecteurs pour les coordonnées spatiales
+{
+    return(sqrt(pow(X_i.Getx()-X_j.Getx(),2)+pow(X_i.Gety()-X_j.Gety(),2)+pow(X_i.Getz()-X_j.Getz(),2)));
+} 
+
 int main()
 {
     ifstream ifile("file.in"); 
@@ -102,14 +110,23 @@ int main()
     //le nombre de Rayleigh rho, un pas h
     ofstream ofile("file.out");
     //Ce fichier de sortie contiendra:
-    //l'ensemble des valeurs de X_i calculés, par la méthode d'Euler, que l'on pourra utiliser dans un script gnuplot
-    
+    //l'ensemble des valeurs de X_i calculés pour les conditions intiales données, par la méthode d'Euler, que l'on pourra utiliser dans un script gnuplot
+    ofstream oofile("file+.out");
+    //Ce fichier de sortie contiendra:
+    //l'ensemble des valeurs de X_i calculé pour les coordonnées initiales décalées d'un certain d, par la méthode d'Euler, que l'on pourra utiliser dans un script gnuplot
+    ofstream dfile("distance.out");
+    //Ce fichier de sortie contiendra :
+    //Le temps et la distance entre 2 vecteurs au temps t
+
     //Introduction des paramètres et objets utilisés:
     double t0,tf;//temps initial et final
     double x0,y0,z0;//coordonnées initiales
+    double X0,Y0,Z0;//coordonnées initiales décalées
     double rho; //nombre de Rayleigh
     double h;//pas d'itération en temps
     double _t;//un instant
+    double d=0.1;//un décalage sur les conditions initiales
+    double D;//la distance entre deux vecteurs
 
     //Lecture du fichier d'entrée:
     ifile>>t0>>tf;
@@ -118,19 +135,38 @@ int main()
     ifile>>h;
 
     _t=t0;
-    
-    vecteur X_0(t0,x0,y0,z0);
-    ofile<<X_0.Gettime()<<" "<<X_0.Getx()<<" "<<X_0.Gety()<<" "<<X_0.Getz()<<endl;//Intégration de X_0 dans le fichier de sortie
 
+    //Coordonnées décalées
+    X0=x0+d;
+    Y0=y0+d;
+    Z0=z0+d;
+    
+    vecteur X_0(t0,x0,y0,z0);//Le vecteur de conditions initiales "normales"
+    ofile<<X_0.Gettime()<<" "<<X_0.Getx()<<" "<<X_0.Gety()<<" "<<X_0.Getz()<<endl;//Intégration de X_0 dans le fichier de sortie
+    vecteur X_0p(t0,X0,Y0,Z0);//Le vecteur de conditions initiales décalées
+    oofile<<X_0p.Gettime()<<" "<<X_0p.Getx()<<" "<<X_0p.Gety()<<" "<<X_0p.Getz()<<endl;//Intégration de X_0p (pour prime) dans le fichier de sortie
+
+    D=distance(X_0,X_0p);//calcul de la distance au temps initial
+    dfile<<_t<<" "<<D<<endl;//intégration dans un fichier de sortie
     
     //Boucle de calcul des X_i et intégration dans le fichier de sortie "file.out"
     while(_t<tf)
     {
         _t=_t+h;
+
         vecteur F(Function(X_0,rho));//Applcation de F à X_0
+        vecteur Fp(Function(X_0p,rho));
         vecteur X_1(Euler(X_0,F,h,rho));//Création du "vecteur" X_1 par la méthode d'Euler
+        vecteur X_1p(Euler(X_0p,Fp,h,rho));//Création du "vecteur" X_1p par la méthode d'Euler
+
         ofile<<X_1.Gettime()<<" "<<X_1.Getx()<<" "<<X_1.Gety()<<" "<<X_1.Getz()<<endl;//Intégration de X_1 dans le fichier de sortie
+        oofile<<X_1p.Gettime()<<" "<<X_1p.Getx()<<" "<<X_1p.Gety()<<" "<<X_1p.Getz()<<endl;//Intégration de X_1p dans le fichier de sortie
+
+        D=distance(X_1,X_1p);//calcul de la distance entre X_i et X_ip
+        dfile<<_t<<" "<<D<<endl;//intégration dans un fichier de sortie
+
         X_0=X_1;//X_0 devient X_1 et "X_1 devient X_2"
+        X_0p=X_1p;
     }
     return 0;
 }    
