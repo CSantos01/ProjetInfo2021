@@ -1,4 +1,4 @@
-set title "Tracé de l'Attracteur de Lorenz pour 2 conditions initiales"
+set title "Tracé dans l'espace des phases pour 2 conditions initiales"
 set xlabel "x(t)"
 set ylabel "y(t)"
 set zlabel "z(t)"
