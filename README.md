@@ -2,7 +2,7 @@
 
 Ce projet a pour objectif de simuler un système chaotique : le modèle météorologique de Lorenz.
 Le code principal se situe dans 'main.cpp'.
-Les fichiers 'file.in' et 'file.out' correspondent aux fichier d'entrée et de sortie.
+Les fichiers 'file.in', 'file.out' et 'file+.out' correspondent aux fichiers d'entrée et de sorties.
 Les fichiers .gnu sont des scripts pour plots diverses choses.
 
 #main.cpp:
@@ -10,7 +10,7 @@ Les fichiers .gnu sont des scripts pour plots diverses choses.
   Prend en argument un fichier d'entrée 'file.in' contenant : un temps initial, un temps final, trois coordoonées initiales, le paramètre rho et un pas de calcul
   Renvoie :
     Un premier fichier de sortie 'file.out' avec les conditions initiales "normales"
-    Un second fichier de sortie 'file+.out' avec les conditions initiales "shiftés"
+    Un second fichier de sortie 'file+.out' avec les conditions initiales "shiftées"
     Un troisième fichier 'distance.out' avec la distance entre les deux points en fonction du temps
   Le tout est calculé par la méthode d'Euler appliquée au système du modèle de Lorenz
   
