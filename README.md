@@ -14,6 +14,9 @@ Les fichiers .gnu sont des scripts pour plots diverses choses.
     Un troisième fichier 'distance.out' avec la distance entre les deux points en fonction du temps
   Le tout est calculé par la méthode d'Euler appliquée au système du modèle de Lorenz
   
+#scriptAttractor1Point.gnu:
+  Script permettant de tracer l'attracteur de Lorenz pour un fichier de sortie
+
 #scriptAttractor2Points.gnu:
   Script permettant de tracer les attracteurs de Lorenz pour deux fichiers de sortie
   Arguments:
